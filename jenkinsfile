@@ -12,6 +12,11 @@ pipeline {
       }
     }
     stage('install-flask') {
+      agent {
+        docker { 
+          image 'python:3.9' // Use the Python Docker image
+        }
+      }
       steps {
         sh 'pip install flask' // Install Flask using pip
         sh 'flask --version'

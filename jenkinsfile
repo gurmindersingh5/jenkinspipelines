@@ -1,0 +1,21 @@
+pipeline {
+  agent none
+  stages {
+    stage('install-python') {
+      agent {
+        docker { 
+          image 'python:3.9' // Use the Python Docker image
+        }
+      }
+      steps {
+        sh 'python3 --version'
+      }
+    }
+    stage('install-flask') {
+      steps {
+        sh 'pip install flask' // Install Flask using pip
+        sh 'flask --version'
+      }
+    }
+  }
+}

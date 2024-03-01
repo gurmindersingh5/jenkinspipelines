@@ -18,7 +18,7 @@ pipeline {
         }
       }
       steps {
-        sh 'pip3 install flask' // Install Flask using pip
+        sh 'sudo pip3 install flask' // Install Flask using pip
         sh 'flask --version'
       }
     }

@@ -1,5 +1,8 @@
 pipeline {
-  agent none
+  agent any
+  environment {
+    IMAGE_TAG = "${BUILD_NUMBER}"
+  }
   stages {
     stage('install-python') {
       agent {
@@ -11,14 +14,40 @@ pipeline {
         sh 'python3 --version'
       }
     }
-    stage('install-flask') {
-      agent {
-        docker { 
-          image 'python:3.9' // Use the Python Docker image
+
+    stage('git-checkout') {
+      steps {
+        git credentialsId: '165382d3-488f-423e-91cd-36ae8a7807d3',
+        url: 'https://github.com/gurmindersingh5/localflaskapp',
+        branch: 'main'
+      }
+    }
+
+    stage('install-requirements') {
+      steps {
+        sh 'pip install -r requirements.txt' // Install Flask app requirements
+      }
+    }
+
+    stage('build-docker-image') {
+      steps {
+        script {
+          sh '''
+            echo 'Building Docker Image'
+            docker build -t myflaskapp:${IMAGE_TAG} .
+          '''
         }
       }
+    }
+
+    stage('run-docker-container') {
       steps {
-        sh 'ps -ef'
+        script {
+          sh '''
+            echo 'Running Docker Container'
+            docker run -d -p 8000:8000 myflaskapp:${IMAGE_TAG}
+          '''
+        }
       }
     }
   }

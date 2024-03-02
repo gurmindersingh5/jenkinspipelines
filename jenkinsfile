@@ -28,7 +28,7 @@ pipeline {
         script {
           sh '''
             echo 'Building Docker Image'
-            docker build -t myflaskapp:${IMAGE_TAG} .
+            sudo docker build -t myflaskapp:${IMAGE_TAG} .
           '''
         }
       }
